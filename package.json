@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "homepage": "https://marketshade-technology-solutions-ltd.github.io/marketshade-profile",
   "dependencies": {
     "framer-motion": "^12.24.12",
     "lucide-react": "^0.562.0",
