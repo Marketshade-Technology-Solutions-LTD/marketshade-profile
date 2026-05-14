@@ -1,25 +1,31 @@
-// src/App.jsx (Updated to single scrollable page)
+// src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Header from './components/Header';
-import Main from './components/Main'; // New component for all sections in one page
+import Main from './components/Main';
 import Careers from './components/Careers';
-import Footer from './components/Footer';
+import AboutUs from './components/AboutUs';
+import Blogs from './components/Blogs';
+import Clients from './components/Clients';
 
 function App() {
   return (
     <Router>
-      <AnimatePresence mode="wait">
-        <div className="min-h-screen bg-gray-50 text-gray-800">
-          <Header />
+      <div className="min-h-screen flex flex-col bg-gray-300 text-[17px]">
+        <Header />
+
+        {/* No padding needed - Main component handles its own top padding */}
+        <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Main />} />
             <Route path="/careers" element={<Careers />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/clients" element={<Clients />} />
           </Routes>
-          <Footer />
         </div>
-      </AnimatePresence>
+      </div>
     </Router>
   );
 }
