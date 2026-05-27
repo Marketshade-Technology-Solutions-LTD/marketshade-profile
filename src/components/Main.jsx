@@ -334,7 +334,7 @@ const Main = () => {
     <main className="bg-gray-300 text-gray-900 selection:bg-yellow-500/30 overflow-x-hidden text-xl">
       
       {/* 1. HERO SECTION */}
-      <section id="home" className="relative min-h-screen flex items-center pt-24 pb-12">
+      <section id="home" className="relative min-h-screen flex items-center pt-20 pb-12">
         <div className="w-full px-4 md:px-8 lg:px-16 relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
             <div className="lg:w-1/2">
@@ -346,7 +346,7 @@ const Main = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.6 }}
-                    className="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-gray-900"
+                    className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight tracking-tight text-gray-900"
                   >
                     {titles[index]}
                   </motion.h1>
@@ -355,20 +355,20 @@ const Main = () => {
 
               <motion.p 
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
-                className="text-gray-700 text-base md:text-lg mb-6 leading-relaxed"
+                className="text-gray-700 text-lg md:text-xl mb-8 leading-relaxed"
               >
                 We're a Kenyan tech company that builds software to help businesses like yours save time, cut costs, and grow faster. No jargon. No overpromises. Just practical solutions that work.
               </motion.p>
 
-              <div className="flex flex-wrap gap-5 mb-6">
+              <div className="flex flex-wrap gap-6 mb-8">
                 {impactStats.map((stat, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-yellow-50 flex items-center justify-center">
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-yellow-50 flex items-center justify-center">
                       {stat.icon}
                     </div>
                     <div>
-                      <div className="text-lg font-bold text-gray-900">{stat.value}</div>
-                      <div className="text-xs text-gray-600">{stat.label}</div>
+                      <div className="text-xl font-bold text-gray-900">{stat.value}</div>
+                      <div className="text-sm text-gray-600">{stat.label}</div>
                     </div>
                   </div>
                 ))}
@@ -376,7 +376,7 @@ const Main = () => {
 
               <button 
                 onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })} 
-                className="px-6 py-2.5 bg-yellow-600 hover:bg-yellow-500 text-white font-bold rounded-lg transition-all shadow-md flex items-center gap-2 group text-sm"
+                className="px-8 py-3 bg-yellow-600 hover:bg-yellow-500 text-white font-bold rounded-lg transition-all shadow-md flex items-center gap-2 group text-base"
               >
                 Let's talk about your business <FaArrowRight className="text-sm group-hover:translate-x-1 transition-transform" />
               </button>
@@ -392,9 +392,9 @@ const Main = () => {
                 alt="Operations Dashboard"
                 className="relative z-10 w-full h-auto"
               />
-              <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-white/95 backdrop-blur-sm border border-yellow-100 rounded-lg px-4 py-1.5 flex gap-3 shadow-md z-20">
+              <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-white/95 backdrop-blur-sm border border-yellow-100 rounded-lg px-5 py-2 flex gap-4 shadow-md z-20">
                 {kenyanClients.slice(0, 3).map((industry, i) => (
-                  <span key={i} className="text-xs font-bold text-yellow-700 whitespace-nowrap">{industry}</span>
+                  <span key={i} className="text-sm font-bold text-yellow-700 whitespace-nowrap">{industry}</span>
                 ))}
               </div>
             </motion.div>

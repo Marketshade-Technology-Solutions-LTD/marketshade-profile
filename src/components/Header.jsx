@@ -1,5 +1,5 @@
 // src/components/Header.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Phone, Mail, ChevronDown, Menu, X } from 'lucide-react';
 import logo from "../components/static/marketshade_company_logo.png";
@@ -8,12 +8,27 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scroll effect for header shadow
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const scrollToSection = (id) => {
     setMobileMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
-      const headerOffset = 200;
+      const headerOffset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
       
@@ -35,15 +50,19 @@ const Header = () => {
 
   return (
     <header
-      className="text-white shadow-xl fixed top-0 left-0 w-full z-50 h-48"
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        scrolled ? 'bg-gray-900 shadow-2xl' : 'bg-gray-900/95 backdrop-blur-sm'
+      }`}
       style={{
-        background: 'linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%)',
+        background: scrolled 
+          ? 'linear-gradient(135deg, #111827 0%, #1f2937 100%)'
+          : 'linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%)',
         borderBottom: '1px solid rgba(234,179,8,0.2)',
       }}
     >
       {/* Subtle techy grid overlay */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-10"
+        className="absolute inset-0 pointer-events-none opacity-5"
         style={{
           backgroundImage: `
             linear-gradient(rgba(234,179,8,0.15) 1px, transparent 1px),
@@ -53,228 +72,223 @@ const Header = () => {
         }}
       />
 
-      <div className="relative w-full h-full flex justify-between items-center px-4 md:px-8">
-        
-        {/* LOGO: flush to left edge, fills full header height */}
-        <div className="h-full flex-shrink-0">
-          <a href="/" onClick={handleLogoClick} className="h-full flex items-center">
-            <img
-              src={logo}
-              alt="Marketshade Logo"
-              className="h-full object-fill hover:opacity-90 transition-opacity"
-              style={{
-                height: '100%',
-                width: '336px',
-              }}
-            />
-          </a>
-        </div>
-
-        {/* DESKTOP NAVIGATION - Immediately after logo, no space */}
-        <div className="hidden lg:flex items-center h-full">
+      <div className="relative w-full px-4 sm:px-6 md:px-10 py-2 md:py-3">
+        <div className="flex items-center">
           
-          {/* Dropdown: Our Products - comes immediately after logo */}
-          <div className="relative group h-full flex items-center">
-            <button className="flex items-center hover:text-yellow-400 font-semibold tracking-wide transition-colors px-4 h-full focus:outline-none">
-              Our Products <ChevronDown size={16} className="ml-1 group-hover:rotate-180 transition-transform" />
-            </button>
-            <div className="absolute top-full left-0 mt-0 w-64 bg-gray-900 border border-gray-700 rounded-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50">
-              <div className="py-2">
-                <a 
-                  href="https://school.marketshade.co.ke" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="block px-6 py-3 hover:bg-gray-800 transition-colors group/item"
-                >
-                  <p className="text-[10px] text-gray-500 uppercase tracking-wider">EdTech</p>
-                  <p className="text-sm font-bold text-white group-hover/item:text-yellow-400">SchoolOS</p>
-                </a>
-                <a 
-                  href="https://shop.marketshade.co.ke" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="block px-6 py-3 hover:bg-gray-800 transition-colors group/item"
-                >
-                  <p className="text-[10px] text-gray-500 uppercase tracking-wider">EduCommerce</p>
-                  <p className="text-sm font-bold text-white group-hover/item:text-yellow-400">Dukawala</p>
-                </a>
-                <a 
-                  href="https://price-watch.marketshade.co.ke" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="block px-6 py-3 hover:bg-gray-800 transition-colors group/item"
-                >
-                  <p className="text-[10px] text-gray-500 uppercase tracking-wider">Sales Tech</p>
-                  <p className="text-sm font-bold text-white group-hover/item:text-yellow-400">Price Watch</p>
-                </a>
+          {/* LOGO - Much larger */}
+          <div className="flex-shrink-0">
+            <a href="/" onClick={handleLogoClick} className="flex items-center">
+              <img
+                src={logo}
+                alt="Marketshade Logo"
+                className="
+                  h-16
+                  sm:h-20
+                  md:h-24
+                  lg:h-28
+                  w-auto
+                  max-w-[190px]
+                  sm:max-w-[240px]
+                  md:max-w-[290px]
+                  lg:max-w-[340px]
+                  hover:opacity-90
+                  transition-opacity
+                  object-contain
+                "
+              />
+            </a>
+          </div>
+
+          {/* DESKTOP NAVIGATION - Minimal spacing, pushed left toward logo */}
+          <div className="hidden xl:flex items-center ml-8 2xl:ml-12">
+            
+            {/* Dropdown: Our Products - Directly next to logo */}
+            <div className="relative group">
+              <button className="flex items-center gap-1 px-2 py-2 text-sm font-semibold tracking-wide text-gray-200 hover:text-yellow-400 transition-colors">
+                Our Products <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300" />
+              </button>
+              <div className="absolute top-full left-0 mt-1 w-56 bg-gray-800 border border-gray-700 rounded-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="py-2">
+                  <a 
+                    href="https://school.marketshade.co.ke" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="block px-4 py-2.5 hover:bg-gray-700 transition-colors"
+                  >
+                    <p className="text-[10px] text-gray-400 uppercase tracking-wider">EdTech</p>
+                    <p className="text-sm font-semibold text-white">SchoolOS</p>
+                  </a>
+                  <a 
+                    href="https://shop.marketshade.co.ke" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="block px-4 py-2.5 hover:bg-gray-700 transition-colors"
+                  >
+                    <p className="text-[10px] text-gray-400 uppercase tracking-wider">EduCommerce</p>
+                    <p className="text-sm font-semibold text-white">Dukawala</p>
+                  </a>
+                  <a 
+                    href="https://price-watch.marketshade.co.ke" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="block px-4 py-2.5 hover:bg-gray-700 transition-colors"
+                  >
+                    <p className="text-[10px] text-gray-400 uppercase tracking-wider">Sales Tech</p>
+                    <p className="text-sm font-semibold text-white">Price Watch</p>
+                  </a>
+                </div>
               </div>
+            </div>
+
+            {/* Our Services */}
+            <button
+              onClick={() => scrollToSection('services')}
+              className="px-2 py-2 text-sm font-semibold tracking-wide text-gray-200 hover:text-yellow-400 transition-colors"
+            >
+              Our Services
+            </button>
+
+            {/* Dropdown: The Company */}
+            <div className="relative group">
+              <button className="flex items-center gap-1 px-2 py-2 text-sm font-semibold tracking-wide text-gray-200 hover:text-yellow-400 transition-colors">
+                The Company <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300" />
+              </button>
+              <div className="absolute top-full left-0 mt-1 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="py-2">
+                  <Link to="/about" className="block px-4 py-2.5 text-sm hover:bg-gray-700 hover:text-yellow-400 transition-colors">About Us</Link>
+                  <Link to="/team" className="block px-4 py-2.5 text-sm hover:bg-gray-700 hover:text-yellow-400 transition-colors">The Team</Link>
+                  <Link to="/clients" className="block px-4 py-2.5 text-sm hover:bg-gray-700 hover:text-yellow-400 transition-colors">Clients</Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Careers */}
+            <Link to="/careers" className="px-2 py-2 text-sm font-semibold tracking-wide text-gray-200 hover:text-yellow-400 transition-colors">
+              Careers
+            </Link>
+
+            {/* Blogs */}
+            <Link to="/blogs" className="px-2 py-2 text-sm font-semibold tracking-wide text-gray-200 hover:text-yellow-400 transition-colors">
+              Blogs
+            </Link>
+
+            {/* Contact Us Button */}
+            <button 
+              onClick={() => scrollToSection('contact')} 
+              className="
+                ml-4
+                px-5
+                py-2
+                bg-yellow-500
+                hover:bg-yellow-600
+                text-gray-900
+                font-bold
+                rounded-full
+                transition-all
+                transform
+                hover:scale-105
+                text-sm
+                xl:text-base
+                shadow-lg
+              "
+            >
+              Contact Us
+            </button>
+
+            {/* Phone and Email */}
+            <div className="flex items-center gap-4 ml-6 pl-6 border-l border-gray-600">
+              <a href="tel:+254712960239" className="flex items-center gap-1 text-sm text-gray-300 hover:text-yellow-400 transition-colors whitespace-nowrap">
+                <Phone size={13} className="text-yellow-500" /> +254 712 960 239
+              </a>
+              <a href="mailto:infodesk@marketshade.co.ke" className="flex items-center gap-1 text-sm text-gray-300 hover:text-yellow-400 transition-colors whitespace-nowrap">
+                <Mail size={13} className="text-yellow-500" /> infodesk@marketshade.co.ke
+              </a>
             </div>
           </div>
 
-          {/* OUR SERVICES Link - scrolls to services section */}
+          {/* Mobile Menu Button - Push to right */}
+          <div className="flex-1 min-w-0"></div>
+          <button 
+            className="xl:hidden text-white p-2 rounded-lg hover:bg-gray-700 transition-colors"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+      </div>
+
+      {/* MOBILE MENU */}
+      <div 
+        className={`xl:hidden absolute top-full left-0 w-full bg-gray-900 border-t border-gray-700 shadow-2xl transition-all duration-300 ease-in-out ${
+          mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+        }`}
+      >
+        <div className="flex flex-col py-4 max-h-[80vh] overflow-y-auto">
+          
+          {/* Our Products */}
+          <div className="px-5 py-3 border-b border-gray-800">
+            <p className="text-yellow-400 font-bold text-sm mb-2">Our Products</p>
+            <div className="space-y-2 pl-3">
+              <a href="https://school.marketshade.co.ke" target="_blank" rel="noopener noreferrer" className="block py-1.5 text-gray-300 hover:text-yellow-400 transition-colors text-sm">
+                <span className="text-gray-500 text-xs">EdTech:</span> SchoolOS
+              </a>
+              <a href="https://shop.marketshade.co.ke" target="_blank" rel="noopener noreferrer" className="block py-1.5 text-gray-300 hover:text-yellow-400 transition-colors text-sm">
+                <span className="text-gray-500 text-xs">EduCommerce:</span> Dukawala
+              </a>
+              <a href="https://price-watch.marketshade.co.ke" target="_blank" rel="noopener noreferrer" className="block py-1.5 text-gray-300 hover:text-yellow-400 transition-colors text-sm">
+                <span className="text-gray-500 text-xs">Sales Tech:</span> Price Watch
+              </a>
+            </div>
+          </div>
+
+          {/* Our Services */}
           <button
             onClick={() => scrollToSection('services')}
-            className="hover:text-yellow-400 font-semibold tracking-wide transition-colors px-4 h-full flex items-center focus:outline-none"
+            className="px-5 py-3 text-left text-gray-200 hover:bg-gray-800 hover:text-yellow-400 transition-colors font-semibold border-b border-gray-800 text-sm"
           >
             Our Services
           </button>
 
-          {/* Dropdown: The Company */}
-          <div className="relative group h-full flex items-center">
-            <button className="flex items-center hover:text-yellow-400 font-semibold tracking-wide transition-colors px-4 h-full focus:outline-none">
-              The Company <ChevronDown size={16} className="ml-1 group-hover:rotate-180 transition-transform" />
-            </button>
-            <div className="absolute top-full left-0 mt-0 w-56 bg-gray-900 border border-gray-700 rounded-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50">
-              <div className="py-2">
-                <Link 
-                  to="/about" 
-                  className="block px-6 py-3 text-sm hover:bg-gray-800 hover:text-yellow-400 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  About Us
-                </Link>
-                <Link 
-                  to="/team" 
-                  className="block px-6 py-3 text-sm hover:bg-gray-800 hover:text-yellow-400 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  The Team
-                </Link>
-                <Link 
-                  to="/clients" 
-                  className="block px-6 py-3 text-sm hover:bg-gray-800 hover:text-yellow-400 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Clients
-                </Link>
-              </div>
+          {/* The Company */}
+          <div className="px-5 py-3 border-b border-gray-800">
+            <p className="text-yellow-400 font-bold text-sm mb-2">The Company</p>
+            <div className="space-y-2 pl-3">
+              <Link to="/about" className="block py-1.5 text-gray-300 hover:text-yellow-400 transition-colors text-sm">About Us</Link>
+              <Link to="/team" className="block py-1.5 text-gray-300 hover:text-yellow-400 transition-colors text-sm">The Team</Link>
+              <Link to="/clients" className="block py-1.5 text-gray-300 hover:text-yellow-400 transition-colors text-sm">Clients</Link>
             </div>
           </div>
 
-          {/* CAREERS Link */}
-          <Link 
-            to="/careers" 
-            className="hover:text-yellow-400 font-semibold tracking-wide transition-colors px-4 h-full flex items-center"
-            onClick={() => setMobileMenuOpen(false)}
-          >
+          {/* Careers */}
+          <Link to="/careers" className="px-5 py-3 text-gray-200 hover:bg-gray-800 hover:text-yellow-400 transition-colors font-semibold border-b border-gray-800 text-sm">
             Careers
           </Link>
-          {/* BLOGS Link */}
-          <Link 
-            to="/blogs" 
-            className="hover:text-yellow-400 font-semibold tracking-wide transition-colors px-4 h-full flex items-center"
-            onClick={() => setMobileMenuOpen(false)}
-          >
+
+          {/* Blogs */}
+          <Link to="/blogs" className="px-5 py-3 text-gray-200 hover:bg-gray-800 hover:text-yellow-400 transition-colors font-semibold border-b border-gray-800 text-sm">
             Blogs
           </Link>
-          
-          {/* CONTACT US Button */}
+
+          {/* Contact Button */}
           <button 
             onClick={() => scrollToSection('contact')} 
-            className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-6 py-2 rounded-full font-bold transition-all transform hover:scale-105 active:scale-95 mx-4"
+            className="mx-5 my-4 px-5 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold rounded-full transition-all text-sm"
           >
             Contact Us
           </button>
 
-          {/* Phone and Email - at the far right end */}
-          <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-gray-600">
-            <a href="tel:+254712960239" className="flex items-center hover:text-yellow-400 transition-colors text-sm">
-              <Phone size={16} className="mr-2 text-yellow-500" /> +254 712 960 239
+          {/* Phone and Email */}
+          <div className="px-5 py-3 border-t border-gray-800 mt-2 space-y-3">
+            <a href="tel:+254712960239" className="flex items-center gap-2 text-gray-300 hover:text-yellow-400 transition-colors text-sm">
+              <Phone size={16} className="text-yellow-500" /> +254 712 960 239
             </a>
-            <a href="mailto:infodesk@marketshade.co.ke" className="flex items-center hover:text-yellow-400 transition-colors text-sm">
-              <Mail size={16} className="mr-2 text-yellow-500" /> infodesk@marketshade.co.ke
+            <a href="mailto:infodesk@marketshade.co.ke" className="flex items-center gap-2 text-gray-300 hover:text-yellow-400 transition-colors text-sm">
+              <Mail size={16} className="text-yellow-500" /> infodesk@marketshade.co.ke
             </a>
           </div>
         </div>
-
-        {/* Mobile Menu Button */}
-        <button 
-          className="lg:hidden text-white p-2"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
       </div>
-
-      {/* MOBILE MENU */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 w-full bg-gray-900 border-t border-gray-700 shadow-xl z-50">
-          <div className="flex flex-col py-4">
-            
-            {/* Mobile: Our Products */}
-            <div className="px-6 py-3 border-b border-gray-800">
-              <p className="text-yellow-400 font-bold mb-2">OUR PRODUCTS</p>
-              <div className="space-y-2 pl-4">
-                <a 
-                  href="https://school.marketshade.co.ke" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="block hover:text-yellow-400 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <span className="text-xs text-gray-400">EdTech:</span> SchoolOS
-                </a>
-                <a 
-                  href="https://shop.marketshade.co.ke" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="block hover:text-yellow-400 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <span className="text-xs text-gray-400">EduCommerce:</span> Dukawala
-                </a>
-                <a 
-                  href="https://price-watch.marketshade.co.ke" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="block hover:text-yellow-400 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <span className="text-xs text-gray-400">Sales Tech:</span> Price Watch
-                </a>
-              </div>
-            </div>
-
-            {/* Mobile: Our Services */}
-            <button
-              onClick={() => scrollToSection('services')}
-              className="px-6 py-3 text-left hover:bg-gray-800 hover:text-yellow-400 transition-colors font-semibold border-b border-gray-800"
-            >
-              OUR SERVICES
-            </button>
-
-            {/* Mobile: The Company */}
-            <div className="px-6 py-3 border-b border-gray-800">
-              <p className="text-yellow-400 font-bold mb-2">THE COMPANY</p>
-              <div className="space-y-2 pl-4">
-                <Link to="/about" className="block hover:text-yellow-400 transition-colors" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
-                <Link to="/team" className="block hover:text-yellow-400 transition-colors" onClick={() => setMobileMenuOpen(false)}>The Team</Link>
-                <Link to="/clients" className="block hover:text-yellow-400 transition-colors" onClick={() => setMobileMenuOpen(false)}>Clients</Link>
-              </div>
-            </div>
-
-            {/* Mobile: Other Links */}
-            <Link to="/careers" className="px-6 py-3 hover:bg-gray-800 hover:text-yellow-400 transition-colors" onClick={() => setMobileMenuOpen(false)}>Careers</Link>
-            <Link to="/blogs" className="px-6 py-3 hover:bg-gray-800 hover:text-yellow-400 transition-colors" onClick={() => setMobileMenuOpen(false)}>BLOGS</Link>
-            <button 
-              onClick={() => scrollToSection('contact')} 
-              className="mx-6 my-3 bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-6 py-2 rounded-full font-bold transition-all"
-            >
-              CONTACT US
-            </button>
-
-            {/* Mobile: Phone and Email */}
-            <div className="px-6 py-3 border-t border-gray-800 mt-2 space-y-3">
-              <a href="tel:+254712960239" className="flex items-center hover:text-yellow-400 transition-colors text-sm">
-                <Phone size={16} className="mr-2 text-yellow-500" /> +254 712 960 239
-              </a>
-              <a href="mailto:infodesk@marketshade.co.ke" className="flex items-center hover:text-yellow-400 transition-colors text-sm">
-                <Mail size={16} className="mr-2 text-yellow-500" /> infodesk@marketshade.co.ke
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
     </header>
   );
 };
