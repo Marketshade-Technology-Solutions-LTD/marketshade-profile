@@ -80,8 +80,8 @@ const AlternatingSolution = ({ solution, index }) => {
       <div className={`lg:w-1/2 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
         <div className="max-w-xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-100 rounded-full mb-4">
-            <FaGem className="text-yellow-600 text-xs" />
-            <span className="text-yellow-700 text-xs font-semibold">Trusted by 100+ organizations</span>
+            {/*<FaGem className="text-yellow-600 text-xs" />
+             <span className="text-yellow-700 text-xs font-semibold">Trusted by 100+ organizations</span> */}
           </div>
           <h3 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 leading-tight">
             {solution.title}
@@ -334,10 +334,22 @@ const Main = () => {
     <main className="bg-gray-300 text-gray-900 selection:bg-yellow-500/30 overflow-x-hidden text-xl">
       
       {/* 1. HERO SECTION */}
-      <section id="home" className="relative min-h-screen flex items-center pt-20 pb-12">
+      <section
+        id="home"
+        className="
+          relative
+          min-h-screen
+          flex
+          items-center
+          pt-24
+          lg:pt-36
+          xl:pt-40
+          pb-12
+        "
+      >
         <div className="w-full px-4 md:px-8 lg:px-16 relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
-            <div className="lg:w-1/2">
+            <div className="lg:w-1/2 pt-4 lg:pt-0">
               <div className="mb-4">
                 <AnimatePresence mode="wait">
                   <motion.h1 
@@ -346,7 +358,7 @@ const Main = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.6 }}
-                    className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight tracking-tight text-gray-900"
+                    className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-black leading-tight tracking-tight text-gray-900"
                   >
                     {titles[index]}
                   </motion.h1>
